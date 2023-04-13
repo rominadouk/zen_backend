@@ -19,6 +19,14 @@ const Journal = require('../models/journalSchema')
 
 //Routes
 
+//GET JOURNALS
+app.get('/journals/:id', async (req, res) => {
+    try { 
+        const oneJournal = await Journal.findById();
+    } catch (err) {
+        console.log(err)
+    }
+})
 // GET EMOTIONS
 app.get('/emotions', async (req, res) => {
     try {
@@ -62,7 +70,7 @@ app.post('/journals', async (req, res) => {
 //DELETE EMOTION
 app.delete('/emotions/:id', async (req, res) => {
     try {
-    const deletedEmotion = await Emotion.findByIdAndRemove(req.params.id, req.body);
+    const deletedEmotion = await Emotion.findByIdAndRemove(req.params.id);
     res.json(deletedEmotion)
     } catch (err) {
         console.log(err)
@@ -72,7 +80,8 @@ app.delete('/emotions/:id', async (req, res) => {
 //DELETE JOURNAL
 app.delete('/journals/:id', async (req, res) => {
     try {
-        const deletedJournal = Journal.findByIdAndRemove(req.params.id, req.body);
+        const deletedJournal = await Journal.findByIdAndRemove(req.params.id)
+        res.json(deletedJournal)
     } catch (err) {
         console.log(err)
     }
@@ -89,7 +98,7 @@ app.put('/emotions/:id', async (req, res)=> {
 });
 
 //UPDATE JOURNAL
-app.put('/journals/:id', async (req, res) => {
+app.put('/updatepost/:id', async (req, res) => {
     try {
         const updatedJournal = await Journal.findByIdAndUpdate(req.params.id, req.body, {new:true});
         res.json(updatedJournal)
