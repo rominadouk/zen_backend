@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+
 require('dotenv').config();
 
 
@@ -16,6 +17,7 @@ const URI = process.env.MONGODB
 //models
 const Emotion = require('../models/emotionSchema');
 const Journal = require('../models/journalSchema')
+const User = require('../models/usersSchema.js')
 
 //Routes
 
@@ -106,6 +108,33 @@ app.put('/updatepost/:id', async (req, res) => {
         console.log(err)
     }
 });
+
+
+//////////////////////////
+//USER AUTHENTICATION
+/////////////////////////
+app.post('/api/register', async (req, res) => {
+        console.log(req.body)
+        try {
+            const user = await User.create(req.body)
+            res.json({ status: 'ok'})
+        } catch (err) {
+            console.log(err)
+            res.json({ status: 'error' })
+        }
+});
+
+app.post('/api/login', async (req, res) => {
+    const user = await User.findOne({
+        email: req.body.email,
+        password: req.body.password
+    })
+    if (user) {
+        return res.json({ status: 'ok', user: true})
+    } else {
+        return res.json({ status: 'error', user: false})
+    }
+})
 
 mongoose.connect(URI)
 mongoose.connection.once('open', () => {
