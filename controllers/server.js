@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const jwt = require('jsonwebtoken')
 
 require('dotenv').config();
 
@@ -13,6 +14,7 @@ app.use(cors());
 
  //Load MongoDB URI
 const URI = process.env.MONGODB
+const SECRET = process.env.SECRETKEY
 
 //models
 const Emotion = require('../models/emotionSchema');
@@ -129,12 +131,33 @@ app.post('/api/login', async (req, res) => {
         email: req.body.email,
         password: req.body.password
     })
+
     if (user) {
-        return res.json({ status: 'ok', user: true})
+        const token = jwt.sign(
+            {
+            name: user.name,
+            email: user.email
+
+        }, SECRET)
+        return res.json({ status: 'ok', user: token })
     } else {
         return res.json({ status: 'error', user: false})
     }
 })
+
+
+
+// app.get('/api/login', async (req, res) => {
+//     const token = req.headers['x-access-token']
+
+//     try {
+//         const decoded = jwt.verify(token, SECRET)
+//         const email = decoded.email
+//     } catch(err) {
+//         console.log(err)
+//         res.json({ status: 'error: invalid token'})
+//     }
+// })
 
 mongoose.connect(URI)
 mongoose.connection.once('open', () => {
