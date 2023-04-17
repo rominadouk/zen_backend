@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const jwt = require('jsonwebtoken')
+const axios = require('axios')
 
 require('dotenv').config();
 
@@ -14,12 +14,11 @@ app.use(cors());
 
  //Load MongoDB URI
 const URI = process.env.MONGODB
-const SECRET = process.env.SECRETKEY
+
 
 //models
 const Emotion = require('../models/emotionSchema');
 const Journal = require('../models/journalSchema')
-const User = require('../models/usersSchema.js')
 
 //Routes
 
@@ -113,51 +112,57 @@ app.put('/updatepost/:id', async (req, res) => {
 
 
 //////////////////////////
-//USER AUTHENTICATION
+//API CALLS
 /////////////////////////
-app.post('/api/register', async (req, res) => {
-        console.log(req.body)
-        try {
-            const user = await User.create(req.body)
-            res.json({ status: 'ok'})
-        } catch (err) {
-            console.log(err)
-            res.json({ status: 'error' })
-        }
+const apiKey = process.env.API_KEY;
+
+//EXERCISE API
+app.get('/exercises', (req, res)=> {
+    const muscle = [
+        "abdominals",
+        "abductors",
+        "adductors",
+        "biceps",
+        "calves",
+        "chest",
+        "forearms",
+        "glutes",
+        "hamstrings",
+        "lats",
+        "lower_back",
+        "middle_back",
+        "neck",
+        "quadriceps",
+        "traps",
+        "triceps"
+    ]
+    const randomMuscleIndex = Math.floor(Math.random()* muscle.length)
+    const randomMuscle = muscle[randomMuscleIndex]
+    const randomNum = Math.floor(Math.random() * 10)
+
+ axios.get(`https://api.api-ninjas.com/v1/exercises?muscle=${randomMuscle}`, {
+    headers: {
+        'X-Api-Key': apiKey
+    }
+    }).then(response => {
+        res.send(response.data[randomNum]);
+    }).catch(err => {
+        console.log(err)
+    })
 });
 
-app.post('/api/login', async (req, res) => {
-    const user = await User.findOne({
-        email: req.body.email,
-        password: req.body.password
+//Jokes API
+app.get('/jokes', (req, res) => {
+    axios.get(`https://api.api-ninjas.com/v1/jokes?=limit=1`, {
+        headers: {
+            'X-Api-Key': apiKey
+        }
+    }).then(response => {
+        res.send(response.data)
+    }).catch(err => {
+        console.log(err)
     })
-
-    if (user) {
-        const token = jwt.sign(
-            {
-            name: user.name,
-            email: user.email
-
-        }, SECRET)
-        return res.json({ status: 'ok', user: token })
-    } else {
-        return res.json({ status: 'error', user: false})
-    }
-})
-
-
-
-// app.get('/api/login', async (req, res) => {
-//     const token = req.headers['x-access-token']
-
-//     try {
-//         const decoded = jwt.verify(token, SECRET)
-//         const email = decoded.email
-//     } catch(err) {
-//         console.log(err)
-//         res.json({ status: 'error: invalid token'})
-//     }
-// })
+});
 
 mongoose.connect(URI)
 mongoose.connection.once('open', () => {
