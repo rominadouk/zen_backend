@@ -125,6 +125,57 @@ app.delete('/goals/:id', async (req,res) => {
 });
 
 
+//Get one habit
+app.get('/habits/:id', async (req,res) => {
+    try {
+        const oneHabit = Habit.findById(req.params.id)
+        res.json(oneHabit)
+    } catch(err) {
+        console.log(err)
+    }
+});
+
+//Get all habits
+app.get('/habits', async (req,res) => {
+    try {
+        const allHabits = Habit.find({})
+        re.json(allHabits)
+    } catch(err) {
+        console.log(err)
+    }
+});
+
+//Create Habit
+app.post('/habits', async (req,res)=> {
+    try {
+        const newHabit = Habit.create(req.body)
+        res.json(newHabit)
+    } catch(err) {
+        console.log(err)
+    }
+});
+
+//Update Habit
+app.put('/habits/:id', async (req,res) => {
+    try {
+        const updatedHabit = Habit.findByIdAndUpdate(req.body, req.params.id, {new:true})
+        res.json(updatedHabit)
+    } catch(err) {
+        console.log(err)
+    }
+});
+
+//Delete Habit
+app.delete('/habits/:id', async (req,res) => {
+    try {
+        const deletedHabit = Habit.findByIdAndRemove(req.params.id)
+        res.json(deletedHabit)
+    } catch(err) {
+        console.log(err)
+    }
+});
+
+
 
 //GE
 
