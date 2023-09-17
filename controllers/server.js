@@ -40,6 +40,16 @@ app.get('/emotions', async (req, res) => {
     }
 });
 
+// GET GOALS
+app.get('/goals', async (req,res) => {
+    try {
+        const allGoals = await Goal.find({});
+        res.json(allGoals)
+    } catch (err) {
+        console.log(err)
+    } 
+});
+
 //GET JOURNALS
 app.get('/journals', async (req,res) => {
     try {
