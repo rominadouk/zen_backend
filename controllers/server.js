@@ -18,35 +18,19 @@ const URI = process.env.MONGODB
 
 //models
 const Emotion = require('../models/emotionSchema');
-const Journal = require('../models/journalSchema')
+const Journal = require('../models/journalSchema');
+const Goal = require('../models/goalSchema');
+const Habit = require('../models/habitSchema');
 
 //Routes
 
 //GET ONE JOURNAL
 app.get('/journals/:id', async (req, res) => {
     try { 
-        const oneJournal = await Journal.findById();
+        const oneJournal = await Journal.findById(req.params.id);
     } catch (err) {
         console.log(err)
     }
-});
-// GET EMOTIONS
-app.get('/emotions', async (req, res) => {
-    try {
-    const allEmotions = await Emotion.find({});
-    res.json(allEmotions) 
-    } catch (err) {
-        console.log(err)
-    }
-});
-// GET GOALS
-app.get('/goals', async (req,res) => {
-    try {
-        const allGoals = await Goal.find({});
-        res.json(allGoals)
-    } catch (err) {
-        console.log(err)
-    } 
 });
 
 //GET JOURNALS
@@ -54,16 +38,6 @@ app.get('/journals', async (req,res) => {
     try {
         const allJournals = await Journal.find({});
         res.json(allJournals)
-    } catch (err) {
-        console.log(err)
-    }
-});
-
-//CREATE EMOTION
-app.post('/emotions', async (req, res)=> {
-    try {
-        const createdEmotion = await Emotion.create(req.body)
-        res.json(createdEmotion)
     } catch (err) {
         console.log(err)
     }
@@ -79,31 +53,11 @@ app.post('/journals', async (req, res) => {
     }
 });
 
-//DELETE EMOTION
-app.delete('/emotions/:id', async (req, res) => {
-    try {
-    const deletedEmotion = await Emotion.findByIdAndRemove(req.params.id);
-    res.json(deletedEmotion)
-    } catch (err) {
-        console.log(err)
-    }
-});
-
 //DELETE JOURNAL
 app.delete('/journals/:id', async (req, res) => {
     try {
         const deletedJournal = await Journal.findByIdAndRemove(req.params.id)
         res.json(deletedJournal)
-    } catch (err) {
-        console.log(err)
-    }
-});
-
-//UPDATE EMOTION
-app.put('/emotions/:id', async (req, res)=> {
-    try {
-        const updatedEmotion = await Emotion.findByIdAndUpdate(req.params.id, req.body, {new:true});
-        res.json(updatedEmotion)
     } catch (err) {
         console.log(err)
     }
@@ -118,6 +72,106 @@ app.put('/updatepost/:id', async (req, res) => {
         console.log(err)
     }
 });
+
+//GET ONE GOAL
+app.get('/goals/:id', async (req, res)=> {
+    try {
+        const oneGoal = Goal.findById(req.params.id)
+        res.json(oneGoal)
+    } catch (err) {
+        console.log(err)
+    }
+});
+
+
+// GET GOALS
+app.get('/goals', async (req,res) => {
+    try {
+        const allGoals = await Goal.find({});
+        res.json(allGoals)
+    } catch (err) {
+        console.log(err)
+    } 
+});
+
+//CREATE GOAL
+app.post('/goals', async (req, res) => {
+    try {
+        const createdGoal = Goal.create(req.body)
+        res.json(createdGoal)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+//UPDATE GOAL
+app.put('/goals/:id', async (req,res)=> {
+    try {
+        const updatedGoal = await Goal.findByIdAndUpdate(req.params.id, req.body, {new:true});
+        res.json(updatedGoal)
+    } catch (err) {
+        console.log(err)
+    }
+});
+
+//DELETE GOAL
+app.delete('/goals/:id', async (req,res) => {
+    try {
+        const deletedGoal = Goal.findByIdAndRemove(req.params.id)
+        res.json(deletedGoal)
+    } catch(err) {
+        console.log(err)
+    }
+});
+
+
+
+//GE
+
+// // GET EMOTIONS
+// app.get('/emotions', async (req, res) => {
+//     try {
+//     const allEmotions = await Emotion.find({});
+//     res.json(allEmotions) 
+//     } catch (err) {
+//         console.log(err)
+//     }
+// });
+
+// CREATE EMOTION
+// app.post('/emotions', async (req, res)=> {
+//     try {
+//         const createdEmotion = await Emotion.create(req.body)
+//         res.json(createdEmotion)
+//     } catch (err) {
+//         console.log(err)
+//     }
+// });
+
+
+//DELETE EMOTION
+// app.delete('/emotions/:id', async (req, res) => {
+//     try {
+//     const deletedEmotion = await Emotion.findByIdAndRemove(req.params.id);
+//     res.json(deletedEmotion)
+//     } catch (err) {
+//         console.log(err)
+//     }
+// });
+
+
+
+//UPDATE EMOTION
+// app.put('/emotions/:id', async (req, res)=> {
+//     try {
+//         const updatedEmotion = await Emotion.findByIdAndUpdate(req.params.id, req.body, {new:true});
+//         res.json(updatedEmotion)
+//     } catch (err) {
+//         console.log(err)
+//     }
+// });
+
+
 
 
 //////////////////////////
