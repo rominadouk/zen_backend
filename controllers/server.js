@@ -22,14 +22,14 @@ const Journal = require('../models/journalSchema')
 
 //Routes
 
-//GET JOURNALS
+//GET ONE JOURNAL
 app.get('/journals/:id', async (req, res) => {
     try { 
         const oneJournal = await Journal.findById();
     } catch (err) {
         console.log(err)
     }
-})
+});
 // GET EMOTIONS
 app.get('/emotions', async (req, res) => {
     try {
@@ -39,7 +39,6 @@ app.get('/emotions', async (req, res) => {
         console.log(err)
     }
 });
-
 // GET GOALS
 app.get('/goals', async (req,res) => {
     try {
