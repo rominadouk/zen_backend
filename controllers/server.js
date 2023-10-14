@@ -28,6 +28,7 @@ const Habit = require('../models/habitSchema');
 app.get('/journals/:id', async (req, res) => {
     try { 
         const oneJournal = await Journal.findById(req.params.id);
+        res.json(oneJournal)
     } catch (err) {
         console.log(err)
     }

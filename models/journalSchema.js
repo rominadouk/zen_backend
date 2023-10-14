@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const journalSchema = new mongoose.Schema (
     {
         title: {type:String, required: true},
-        post: String,
         tags: [String]
     }, {timestamps:true}
 )
