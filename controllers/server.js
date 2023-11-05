@@ -15,6 +15,9 @@ app.use(cors());
  //Load MongoDB URI
 const URI = process.env.MONGO_URI
 
+const port = process.env.PORT || 4000;
+
+
 
 //models
 const Journal = require('../models/journalSchema');
@@ -242,6 +245,7 @@ mongoose.connection.once('open', () => {
 });
 
 
-// app.listen(4000, () => {
-//     console.log('listening...')
-// });
+
+app.listen(port, () => {
+    console.log('listening...')
+});
