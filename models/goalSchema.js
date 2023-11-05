@@ -4,7 +4,7 @@ const goalSchema = new mongoose.Schema(
     {
         title: {type:String, required: true},
         toBeCompletedBy: Date, 
-        isCompleted: false
+        isCompleted: {type: Boolean, default: false}
     }
 );
 
