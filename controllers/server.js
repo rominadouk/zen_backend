@@ -17,7 +17,6 @@ const URI = process.env.MONGO_URI
 
 
 //models
-const Emotion = require('../models/emotionSchema');
 const Journal = require('../models/journalSchema');
 const Goal = require('../models/goalSchema');
 const Habit = require('../models/habitSchema');
@@ -175,54 +174,6 @@ app.delete('/habits/:id', async (req,res) => {
         console.log(err)
     }
 });
-
-
-
-
-
-// // GET EMOTIONS
-// app.get('/emotions', async (req, res) => {
-//     try {
-//     const allEmotions = await Emotion.find({});
-//     res.json(allEmotions) 
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
-
-// CREATE EMOTION
-// app.post('/emotions', async (req, res)=> {
-//     try {
-//         const createdEmotion = await Emotion.create(req.body)
-//         res.json(createdEmotion)
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
-
-
-//DELETE EMOTION
-// app.delete('/emotions/:id', async (req, res) => {
-//     try {
-//     const deletedEmotion = await Emotion.findByIdAndRemove(req.params.id);
-//     res.json(deletedEmotion)
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
-
-
-
-//UPDATE EMOTION
-// app.put('/emotions/:id', async (req, res)=> {
-//     try {
-//         const updatedEmotion = await Emotion.findByIdAndUpdate(req.params.id, req.body, {new:true});
-//         res.json(updatedEmotion)
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
-
 
 
 
