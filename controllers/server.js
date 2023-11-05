@@ -21,6 +21,12 @@ const Journal = require('../models/journalSchema');
 const Goal = require('../models/goalSchema');
 const Habit = require('../models/habitSchema');
 
+//Handle promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  });
+
+
 //Routes
 
 //GET ONE JOURNAL
@@ -236,6 +242,6 @@ mongoose.connection.once('open', () => {
 });
 
 
-// app.listen(4000, () => {
-//     console.log('listening...')
-// });
+app.listen(4000, () => {
+    console.log('listening...')
+});
