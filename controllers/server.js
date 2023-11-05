@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const axios = require('axios')
 
-require('dotenv').config();
+require('dotenv').config()
 
 
 //middleware
@@ -13,11 +13,10 @@ app.use(express.json());
 app.use(cors());
 
  //Load MongoDB URI
-const URI = process.env.MONGODB
+const URI = process.env.MONGO_URI
 
 
 //models
-const Emotion = require('../models/emotionSchema');
 const Journal = require('../models/journalSchema');
 const Goal = require('../models/goalSchema');
 const Habit = require('../models/habitSchema');
@@ -28,6 +27,7 @@ const Habit = require('../models/habitSchema');
 app.get('/journals/:id', async (req, res) => {
     try { 
         const oneJournal = await Journal.findById(req.params.id);
+        res.json(oneJournal)
     } catch (err) {
         console.log(err)
     }
@@ -76,7 +76,7 @@ app.put('/updatepost/:id', async (req, res) => {
 //GET ONE GOAL
 app.get('/goals/:id', async (req, res)=> {
     try {
-        const oneGoal = Goal.findById(req.params.id)
+        const oneGoal = await Goal.findById(req.params.id)
         res.json(oneGoal)
     } catch (err) {
         console.log(err)
@@ -97,7 +97,7 @@ app.get('/goals', async (req,res) => {
 //CREATE GOAL
 app.post('/goals', async (req, res) => {
     try {
-        const createdGoal = Goal.create(req.body)
+        const createdGoal = await Goal.create(req.body)
         res.json(createdGoal)
     } catch (err) {
         console.log(err)
@@ -117,7 +117,7 @@ app.put('/goals/:id', async (req,res)=> {
 //DELETE GOAL
 app.delete('/goals/:id', async (req,res) => {
     try {
-        const deletedGoal = Goal.findByIdAndRemove(req.params.id)
+        const deletedGoal = await Goal.findByIdAndRemove(req.params.id)
         res.json(deletedGoal)
     } catch(err) {
         console.log(err)
@@ -125,52 +125,55 @@ app.delete('/goals/:id', async (req,res) => {
 });
 
 
+//Get one habit
+app.get('/habits/:id', async (req,res) => {
+    try {
+        const oneHabit = await Habit.findById(req.params.id)
+        res.json(oneHabit)
+    } catch(err) {
+        console.log(err)
+    }
+});
 
-//GE
+//Get all habits
+app.get('/habits', async (req,res) => {
+    try {
+        const allHabits = await Habit.find({})
+        res.json(allHabits)
+    } catch(err) {
+        console.log(err)
+    }
+});
 
-// // GET EMOTIONS
-// app.get('/emotions', async (req, res) => {
-//     try {
-//     const allEmotions = await Emotion.find({});
-//     res.json(allEmotions) 
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
+//Create Habit
+app.post('/habits', async (req,res)=> {
+    try {
+        const newHabit = await Habit.create(req.body)
+        res.json(newHabit)
+    } catch(err) {
+        console.log(err)
+    }
+});
 
-// CREATE EMOTION
-// app.post('/emotions', async (req, res)=> {
-//     try {
-//         const createdEmotion = await Emotion.create(req.body)
-//         res.json(createdEmotion)
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
+//Update Habit
+app.put('/habits/:id', async (req, res) => {
+    try {
+        const updatedHabit = await Habit.findByIdAndUpdate(req.params.id, req.body, {new:true})
+        res.json(updatedHabit)
+    } catch(err) {
+        console.log(err)
+    }
+});
 
-
-//DELETE EMOTION
-// app.delete('/emotions/:id', async (req, res) => {
-//     try {
-//     const deletedEmotion = await Emotion.findByIdAndRemove(req.params.id);
-//     res.json(deletedEmotion)
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
-
-
-
-//UPDATE EMOTION
-// app.put('/emotions/:id', async (req, res)=> {
-//     try {
-//         const updatedEmotion = await Emotion.findByIdAndUpdate(req.params.id, req.body, {new:true});
-//         res.json(updatedEmotion)
-//     } catch (err) {
-//         console.log(err)
-//     }
-// });
-
+//Delete Habit
+app.delete('/habits/:id', async (req,res) => {
+    try {
+        const deletedHabit = await Habit.findByIdAndRemove(req.params.id)
+        res.json(deletedHabit)
+    } catch(err) {
+        console.log(err)
+    }
+});
 
 
 
@@ -233,6 +236,6 @@ mongoose.connection.once('open', () => {
 });
 
 
-app.listen(4000, () => {
-    console.log('listening...')
-});
+// app.listen(4000, () => {
+//     console.log('listening...')
+// });
