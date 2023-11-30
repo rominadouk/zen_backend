@@ -4,9 +4,19 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const axios = require('axios')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 require('dotenv').config()
 
+const JWT_SECRET = process.env.JWT_SECRET;
+// Mock user for example
+const user = {
+    id: 1,
+    username: 'exampleuser',
+    password: '$2a$10$...', // this should be a hashed password
+  };
+  
 
 //middleware
 app.use(express.json());
@@ -23,6 +33,7 @@ const port = process.env.PORT || 4000;
 const Journal = require('../models/journalSchema');
 const Goal = require('../models/goalSchema');
 const Habit = require('../models/habitSchema');
+const User = require('../models/userSchema')
 
 //Handle promise rejections
 process.on('unhandledRejection', (reason, promise) => {
@@ -31,6 +42,63 @@ process.on('unhandledRejection', (reason, promise) => {
 
 
 //Routes
+
+//Register User
+app.post('/register', async (req,res)=> {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const user = new User({
+            username: req.body.username,
+            password: hashedPassword
+        })
+        const savedUser = await user.save();
+        res.status(201).send('User created');
+    } catch (err) {
+        res.status(500).send('Error registering user')
+    }
+});
+
+// Login Route
+app.post('/login', async (req, res) => {
+    try {
+        const user = await User.findOne({ username:req.body.username})
+        if(user.username !== req.body.username) {
+            return res.status(400).send('Invalid credentials');
+        }
+        if (!(await bcrypt.compare(req.body.password, user.password))) {
+            return res.status(400).send('Invalid credentials')
+        }
+
+        const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+        res.status(200).json({ token });
+    } catch (err) {
+        res.status(500).send('Error logging in')
+
+    }
+});
+
+//Middleware to authenticate
+
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token  = authHeader && authHeader.split(' ')[1];
+    if(token == null) return res.sendStatus(401); //if no token, return unauthorized
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if(err) return res.sendStatus(403); //if token is not valid return forbidden
+        req.user = user;
+        next()
+    });
+
+}
+
+// Protected Route
+app.get('/protected', authenticateToken, (req, res) => {
+    res.status(200).send(`Welcome User ${req.user.userId}`);
+  });
+  
+
+
 
 //GET ONE JOURNAL
 app.get('/journals/:id', async (req, res) => {
