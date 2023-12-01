@@ -10,12 +10,6 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config()
 
 const JWT_SECRET = process.env.JWT_SECRET;
-// Mock user for example
-const user = {
-    id: 1,
-    username: 'exampleuser',
-    password: '$2a$10$...', // this should be a hashed password
-  };
   
 
 //middleware
